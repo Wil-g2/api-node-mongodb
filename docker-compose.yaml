@@ -1,0 +1,37 @@
+version: "3"
+
+networks:
+  web:
+
+services:
+  api:
+    build: .
+    container_name: api
+    networks:
+      - web
+    depends_on:
+      - mongo
+    volumes:
+      - .:/app
+    ports:
+      - 3333:3333
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/orders
+
+  mongo:
+    image: mongo
+    container_name: mongo
+    restart: always
+    networks: 
+      - web
+    ports:
+      - 27017:27017
+
+  mongo-express:
+    container_name: mongo-express
+    image: mongo-express
+    restart: always
+    networks:
+      - web
+    ports:
+      - 8081:8081
